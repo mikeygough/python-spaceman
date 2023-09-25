@@ -83,9 +83,6 @@ def is_guess_in_word(guess, secret_word):
     else:
         return False
 
-
-
-
 def spaceman(secret_word):
     '''
     A function that controls the game of spaceman. Will start spaceman in the command line.
@@ -94,31 +91,69 @@ def spaceman(secret_word):
       secret_word (string): the secret word to guess.
 
     '''
-
-
+    
     #TODO: show the player information about the game according to the project spec
+    print('Welcome to Spaceman!')
+    print(f'The secret word contains: {len(secret_word)} letters')
+    
+    # initialize game
+    letters_guessed = []
+    alphabet = ['a', 'b', 'c', 'd', 'e',
+                'f', 'g', 'h', 'i', 'j',
+                'k', 'l', 'm', 'n', 'o',
+                'p', 'q', 'r', 's', 't',
+                'u', 'v', 'w', 'x', 'y',
+                'z']
+    strikes = 0
+    playing = True
+    
+    while playing:
+        
+        #TODO: check if the game has been won
+        if is_word_guessed(secret_word, letters_guessed):
+            print('\nYou won!')
+            break
+        
+        # check if the game has been won
+        if strikes == 7:
+            print('\nYou lose!')
+            print(f'The secret word was {secret_word}')
+            break
+        
+        # output strikes
+        print(f'\nStrike Count: {strikes}')
+        
+        # calculating remaining letters.
+        remaining_letters = [letter for letter in alphabet if letter not in letters_guessed]
+        remaining_letters_output = 'Available Letters: '
+        for letter in remaining_letters:
+            remaining_letters_output += letter
+        print(remaining_letters_output)
+        
+        #TODO: Ask the player to guess one letter per round and check that it is only one letter
+        guess = input('Guess a letter > ').lower()
+        
+        # check for valid guess
+        while len(guess) != 1 or not guess.isalpha():
+            print('Not a valid guess. Please guess a single letter.')
+            guess = input('Guess a letter > ').lower()
+            
+        while guess in letters_guessed:
+            print(f'You already guessed "{guess}"! Please guess again.')
+            guess = input('Guess a letter > ').lower()
+        
+        letters_guessed.append(guess)
 
-    #TODO: Ask the player to guess one letter per round and check that it is only one letter
+        #TODO: Check if the guessed letter is in the secret or not and give the player feedback
+        if is_guess_in_word(guess, secret_word):
+            print('Your guess appears in the word!')
+        else:
+            print('Sorry your guess does not appear in the word. Please try again!')
+            strikes += 1
 
-    #TODO: Check if the guessed letter is in the secret or not and give the player feedback
-
-    #TODO: show the guessed word so far
-
-    #TODO: check if the game has been won or lost
-
-
-
-
-
+        #TODO: show the guessed word so far
+        print(f'Guessed word so far: {get_guessed_word(secret_word, letters_guessed)}')
 
 #These function calls that will start the game
 secret_word = load_word()
-print(secret_word)
-
-letters_guessed = ['a','b']
-print(is_word_guessed(secret_word, letters_guessed))
-
-print(get_guessed_word(secret_word, letters_guessed))
 spaceman(secret_word)
-
-print(is_guess_in_word('a', secret_word))
